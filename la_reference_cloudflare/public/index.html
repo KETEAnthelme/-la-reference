@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AG.LA REFERENCE — Gestion scolaire</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="login" class="login-screen">
+  <div class="login-card">
+    <img class="login-hero" src="accueil-classe.jpg" alt="Réunion pédagogique dans une salle de classe du Groupe Scolaire La Référence : direction, censeur, enseignant, surveillant et apprenants">
+    <div class="brand-mark">LR</div>
+    <h1>LA RÉFÉRENCE</h1>
+    <p>Plateforme de gestion scolaire</p>
+    <label class="login-role-label" for="loginRole">Je souhaite me connecter en tant que</label>
+    <select id="loginRole" class="login-role" aria-label="Choisir votre espace de connexion">
+      <option value="administrateur_general">Administrateur général</option>
+      <option value="direction">Directeur / Directrice</option>
+      <option value="censeur">Censeur</option>
+      <option value="enseignant">Enseignant</option>
+      <option value="comptable">Comptabilité</option>
+      <option value="surveillant">Surveillant</option>
+      <option value="secretariat">Secrétariat</option>
+      <option value="parent">Parent d’élève</option>
+    </select>
+    <input id="loginUser" type="text" placeholder="Numéro de compte AG100001" autocomplete="username">
+    <input id="loginPass" type="password" placeholder="Mot de passe" autocomplete="current-password">
+    <button onclick="login()">Se connecter</button>
+    <small>Votre espace sera ouvert uniquement si votre compte possède le rôle choisi. Les droits réels sont vérifiés par le serveur.</small>
+  </div>
+</div>
+
+<div id="app" class="hidden">
+  <aside class="sidebar">
+    <div class="brand"><span class="logo">LR</span><div><b>GROUPE SCOLAIRE LA RÉFÉRENCE</b><small>Plateforme de gestion scolaire</small></div></div>
+    <nav class="main-nav">
+      <button class="home-nav" data-page="dashboard" onclick="showPage('dashboard')">Accueil</button>
+      <details class="nav-group"><summary>ACTEURS</summary>
+        <button data-page="students" onclick="showPage('students')">Apprenants</button>
+        <button data-page="teachers" onclick="showPage('teachers')">Enseignants</button>
+        <button data-page="hr" onclick="showPage('hr')">Gestion du personnel / RH</button>
+        <button data-page="attendance" onclick="showPage('attendance')">Disciplines et présences</button>
+        <button data-page="reports" onclick="showPage('reports')">Infos synthèse</button>
+      </details>
+      <details class="nav-group"><summary>GESTIONS COURANTES</summary>
+        <details class="sub-group"><summary>SCOLARITÉ</summary>
+          <button data-page="classes" onclick="showPage('classes')">Classes année scolaire</button>
+          <button data-page="groups" onclick="showPage('groups')">Groupes pédagogiques M1/M2/M3</button>
+          <button data-page="students" onclick="showPage('students')">Inscriptions et apprenants</button>
+        </details>
+        <details class="sub-group"><summary>PÉDAGOGIE</summary>
+          <button data-page="schedule" onclick="showPage('schedule')">Emploi du temps</button>
+          <button data-page="teachers" onclick="showPage('teachers')">Affectation enseignants</button>
+          <button data-page="grades" onclick="showPage('grades')">Saisie de notes par matière / classe</button>
+          <button data-page="ped-assign-teachers" onclick="showPage('ped-assign-teachers')">Affectation des enseignants</button>
+          <button data-page="ped-assign-subjects" onclick="showPage('ped-assign-subjects')">Affectation des matières</button>
+          <button data-page="ped-interrogations" onclick="showPage('ped-interrogations')">Moyenne des interrogations</button>
+          <button data-page="ped-student-averages" onclick="showPage('ped-student-averages')">Moyenne par apprenant</button>
+          <button data-page="ped-subject-averages" onclick="showPage('ped-subject-averages')">Moyennes par matière</button>
+          <button data-page="ped-term-averages" onclick="showPage('ped-term-averages')">Moyennes par trimestre</button>
+          <button data-page="ped-annual" onclick="showPage('ped-annual')">Moyennes annuelles / passage</button>
+          <button data-page="bulletins" onclick="showPage('bulletins')">Bulletins avec photo</button><button data-page="cards" onclick="showPage('cards')">Cartes scolaires</button>
+          <button data-page="reports" onclick="showPage('reports')">Moyennes et résultats</button>
+        </details>
+      </details>
+      <details class="nav-group"><summary>FINANCES</summary>
+        <button data-page="payments" onclick="showPage('payments')">Frais de scolarité</button>
+        <button data-page="finance-movements" onclick="showPage('finance-movements')">Mouvements et impayés</button>
+      </details>
+      <details class="nav-group"><summary>ADMINISTRATION</summary>
+        <button data-page="settings" onclick="showPage('settings')">Mon compte et paramètres</button>
+        <button data-page="settings" onclick="showPage('settings')">Établissements</button>
+        <button data-page="access" onclick="showPage('access')">Comptes et autorisations</button>
+        <button data-page="classes" onclick="showPage('classes')">Examens, périodes et matières</button>
+      </details>
+      <details class="nav-group"><summary>ÉDITION</summary>
+        <button data-page="edition" onclick="showPage('edition')">Édition complète par classe (A4)</button>
+        <button data-page="students" onclick="showPage('students')">Liste par classe</button>
+        <button data-page="grades" onclick="showPage('grades')">Fiches de notes</button><button data-page="bulletins" onclick="showPage('bulletins')">Bulletins scolaires</button><button data-page="cards" onclick="showPage('cards')">Cartes scolaires</button>
+        <button data-page="finance-movements" onclick="showPage('finance-movements')">Liste des impayés</button>
+        <button data-page="reports" onclick="showPage('reports')">Grille de scolarité et résultats</button>
+        <button data-page="educmaster" onclick="showPage('educmaster')">Listes et notes pour EDUCMASTER</button>
+      </details>
+      <button class="logout" onclick="logout()">Déconnexion</button>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <header class="topbar"><button class="mobile-menu" onclick="toggleSide()">☰</button><div><b id="pageTitle">Tableau de bord</b><span id="today"></span></div><div class="user">👤 Administrateur</div></header>
+    <section id="content"></section>
+  </main>
+</div>
+
+<div id="modal" class="modal hidden"><div class="modal-card"><div class="modal-head"><h3 id="modalTitle"></h3><button onclick="closeModal()">×</button></div><div id="modalBody"></div></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

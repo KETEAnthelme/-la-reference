@@ -31,8 +31,20 @@ async function logout(){if(supabaseClient)await supabaseClient.auth.signOut();lo
 
 function accessPage(){
  const sites=liveSites.map(s=>`<label class="site-check"><input type="checkbox" name="accessSite" value="${esc(s.id)}" checked> ${esc(s.code+" — "+s.nom)}</label>`).join("");
- return pageShell("Gestion des accès","Inviter les membres du personnel et les parents avec des droits limités", "", "", `<div class="notice">Seul l'administrateur général crée les comptes. Les comptes du personnel sont créés par l’administrateur. La connexion se fait ensuite avec la fonction choisie, le nom, le prénom et le mot de passe provisoire.</div><div class="card" style="margin-top:15px"><h3>Créer un compte / envoyer une invitation</h3><div class="form-grid"><label>Nom<input id="accessNom" required></label><label>Prénoms<input id="accessPrenom" required></label><label>Téléphone (facultatif, non utilisé pour la connexion)<input id="accessPhone" type="tel" placeholder="+229XXXXXXXX"></label><label>Adresse e-mail (facultatif)<input id="accessEmail" type="email"></label><label>Fonction<select id="accessRole" onchange="toggleParentAccess()"><option value="secretariat">Secrétariat / Caisse</option><option value="surveillant">Surveillant</option><option value="censeur">Censeur</option><option value="direction">Directeur</option></select></label><label id="parentAccessField" class="full" style="display:none">ID du dossier parent déjà enregistré<input id="accessParentId" type="number" min="1" placeholder="Numéro du dossier parent"></label></div><div id="accessSites" style="margin-top:12px"><b>Établissement(s) autorisé(s)</b><div class="site-checks">${sites}</div></div><button class="btn primary" style="margin-top:16px" onclick="inviteAccess()">Créer le compte</button><p class="muted" id="accessFeedback" aria-live="polite"></p></div><div class="card" style="margin-top:15px"><h3>Règles de sécurité</h3><ul><li>Les rôles d'administrateur ne peuvent pas être créés depuis ce formulaire.</li><li>Un membre du personnel n'accède qu'aux établissements qui lui sont attribués.</li><li>Un compte parent est associé à un dossier parent précis.</li><li>Les bulletins restent réservés à l'administration.</li></ul></div>`);
+ return pageShell("Gestion des accès","Créer les accès et assister les parents pour leurs mots de passe", "", "", `<div class="notice">Seul l'administrateur général peut gérer les comptes et réinitialiser les mots de passe. Lorsqu'un parent se présente à l'administration, générez un mot de passe provisoire et remettez-le-lui en privé. Il devra obligatoirement choisir son propre mot de passe à sa prochaine connexion.</div><div class="card" style="margin-top:15px"><h3>Réinitialiser le mot de passe d'un parent</h3><div class="form-grid"><label class="full">Numéro de téléphone enregistré dans le dossier parent<input id="parentResetPhone" type="tel" inputmode="tel" placeholder="Ex. +229XXXXXXXX"></label></div><button class="btn primary" style="margin-top:12px" onclick="resetParentPassword()">Générer un nouveau mot de passe provisoire</button><p class="muted" id="parentResetFeedback" aria-live="polite"></p></div><div class="card" style="margin-top:15px"><h3>Créer un compte / envoyer une invitation</h3><div class="form-grid"><label>Nom<input id="accessNom" required></label><label>Prénoms<input id="accessPrenom" required></label><label>Téléphone (facultatif)<input id="accessPhone" type="tel" placeholder="+229XXXXXXXX"></label><label>Adresse e-mail (facultatif)<input id="accessEmail" type="email"></label><label>Fonction<select id="accessRole" onchange="toggleParentAccess()"><option value="secretariat">Secrétariat / Caisse</option><option value="surveillant">Surveillant</option><option value="censeur">Censeur</option><option value="direction">Directeur</option><option value="parent">Parent</option></select></label><label id="parentAccessField" class="full" style="display:none">ID du dossier parent déjà enregistré<input id="accessParentId" type="number" min="1" placeholder="Numéro du dossier parent"></label></div><div id="accessSites" style="margin-top:12px"><b>Établissement(s) autorisé(s)</b><div class="site-checks">${sites}</div></div><button class="btn primary" style="margin-top:16px" onclick="inviteAccess()">Créer le compte</button><p class="muted" id="accessFeedback" aria-live="polite"></p></div><div class="card" style="margin-top:15px"><h3>Règles de sécurité</h3><ul><li>Les rôles d'administrateur ne peuvent pas être créés depuis ce formulaire.</li><li>Un membre du personnel n'accède qu'aux établissements qui lui sont attribués.</li><li>Un compte parent est associé à un dossier parent précis.</li><li>Le mot de passe provisoire n'est communiqué qu'au parent concerné.</li></ul></div>`);
 }
+async function resetParentPassword(){
+ if(!liveMode||currentProfile?.role!=="administrateur_general"){alert("Cette opération est réservée à l'administrateur général.");return;}
+ const phone=val("parentResetPhone").trim(),feedback=document.getElementById("parentResetFeedback");
+ if(!phone){feedback.textContent="Saisissez le numéro de téléphone du parent.";return;}
+ if(!confirm("Confirmez-vous la réinitialisation du mot de passe du parent associé à ce numéro ?"))return;
+ feedback.textContent="Génération du mot de passe provisoire…";
+ const {data,error}=await supabaseClient.functions.invoke("manage-access",{body:{action:"reset_parent_password",telephone:phone}});
+ if(error||data?.error){feedback.textContent="Échec : "+(data?.error||error?.message||"erreur inconnue");return;}
+ feedback.innerHTML=`<b>${esc(data.nom||"")} ${esc(data.prenom||"")}</b><br>${esc(data.message||"Mot de passe provisoire généré.")}<br><br><b>Identifiant parent : ${esc(data.login_code||"")}</b><br><b>Nouveau mot de passe provisoire : ${esc(data.temporary_password||"")}</b><br><small>Remettez ces informations au parent en privé. Le mot de passe provisoire ne sera plus affiché après avoir quitté cette page.</small>`;
+ document.getElementById("parentResetPhone").value="";
+}
+
 function toggleParentAccess(){const isParent=val("accessRole")==="parent";const f=document.getElementById("parentAccessField"),s=document.getElementById("accessSites");if(f)f.style.display=isParent?"block":"none";if(s)s.style.display=isParent?"none":"block";}
 async function inviteAccess(){
  if(!liveMode||!supabaseClient){alert("Connectez-vous avec votre compte administrateur général.");return;}
@@ -1341,31 +1353,53 @@ async function loadLiveData(){
 }
 function toggleLoginFields(){
  const admin=val("loginRole")==="administrateur_general";
+ const parent=val("loginRole")==="parent";
  document.getElementById("adminLoginFields").classList.toggle("hidden",!admin);
  document.getElementById("staffLoginFields").classList.toggle("hidden",admin);
+ document.getElementById("loginUser").classList.toggle("hidden",parent);
+ document.getElementById("loginFirstName").classList.toggle("hidden",parent);
+ document.getElementById("loginParentPhone")?.classList.toggle("hidden",!parent);
+}
+async function submitTemporaryPasswordChange(){
+ const p1=val("forcedNewPassword"),p2=val("forcedNewPasswordConfirm"),feedback=document.getElementById("forcedPasswordFeedback");
+ if(p1.length<8){feedback.textContent="Le nouveau mot de passe doit contenir au moins 8 caractères.";return;}
+ if(p1!==p2){feedback.textContent="Les deux mots de passe ne correspondent pas.";return;}
+ feedback.textContent="Enregistrement du nouveau mot de passe…";
+ const {data,error}=await supabaseClient.functions.invoke("manage-access",{body:{action:"change_own_password",password:p1}});
+ if(error||data?.error){feedback.textContent="Échec : "+(data?.error||error?.message||"erreur inconnue");return;}
+ document.getElementById("login").classList.add("hidden");document.getElementById("app").classList.remove("hidden");
+ const userLabel=document.querySelector(".topbar .user");if(userLabel)userLabel.textContent="👤 "+[currentProfile?.prenom,currentProfile?.nom].filter(Boolean).join(" ");
+ showPage("dashboard");
 }
 async function login(){
  if(!supabaseClient){alert("Connexion impossible : le service Supabase ne s'est pas chargé.");return}
- const selectedRole=val("loginRole"),isAdmin=selectedRole==="administrateur_general";
+ const selectedRole=val("loginRole"),isAdmin=selectedRole==="administrateur_general",isParent=selectedRole==="parent";
  const btn=document.querySelector(".login-card button");btn.disabled=true;btn.textContent="Connexion...";
  try{
+  let mustChangePassword=false;
   if(isAdmin){
    const email=val("loginEmail").trim().toLowerCase(),password=val("adminPass");
    if(!email||!password)throw new Error("Saisissez votre adresse e-mail et votre mot de passe administrateur.");
    const {error}=await supabaseClient.auth.signInWithPassword({email,password});if(error)throw error;
   }else{
-   const nom=val("loginUser").trim(),prenom=val("loginFirstName").trim(),password=val("loginPass");
-   if(!nom||!prenom||!password)throw new Error("Saisissez votre nom, votre prénom et votre mot de passe.");
-   const {data,error}=await supabaseClient.functions.invoke("login-by-name",{body:{nom,prenom,password}});
+   const nom=val("loginUser").trim(),prenom=val("loginFirstName").trim(),password=val("loginPass"),telephone=val("loginParentPhone")?.trim()||"";
+   if(!password||(isParent?!telephone:(!nom||!prenom)))throw new Error(isParent?"Saisissez votre numéro de téléphone et votre mot de passe.":"Saisissez votre nom, votre prénom et votre mot de passe.");
+   const {data,error}=await supabaseClient.functions.invoke("login-by-name",{body:isParent?{role:"parent",telephone,password}:{nom,prenom,password,role:selectedRole}});
    if(error||data?.error)throw new Error(data?.error||error?.message||"Connexion impossible.");
+   mustChangePassword=data.must_change_password===true;
    const {error:sessionError}=await supabaseClient.auth.setSession({access_token:data.access_token,refresh_token:data.refresh_token});if(sessionError)throw sessionError;
   }
   liveMode=true;await loadLiveData();
   if(!currentProfile?.actif)throw new Error("Ce compte est désactivé. Contactez l'administration.");
-  const roleAliases={administrateur_general:["administrateur_general"],direction:["direction","directeur"],censeur:["censeur"],surveillant:["surveillant"],secretariat_caisse:["secretariat","secretaire","comptable","caissier"]};
+  const roleAliases={administrateur_general:["administrateur_general"],direction:["direction","directeur"],censeur:["censeur"],surveillant:["surveillant"],secretariat_caisse:["secretariat","secretaire","comptable","caissier"],parent:["parent"]};
   if(!(roleAliases[selectedRole]||[]).includes(currentProfile.role)){
    await supabaseClient.auth.signOut();currentProfile=null;liveMode=false;
    throw new Error("Ce compte n'est pas autorisé pour la fonction choisie. Vérifiez votre fonction ou contactez l'administrateur.");
+  }
+  if(mustChangePassword){
+   document.getElementById("login").classList.remove("hidden");document.getElementById("app").classList.add("hidden");
+   document.querySelector(".login-card").innerHTML=`<div class="brand-mark">LR</div><h1>LA RÉFÉRENCE</h1><h3>Créer votre nouveau mot de passe</h3><p>Votre ancien mot de passe provisoire ne sera plus valable après cette étape.</p><input id="forcedNewPassword" type="password" autocomplete="new-password" placeholder="Nouveau mot de passe (8 caractères minimum)"><input id="forcedNewPasswordConfirm" type="password" autocomplete="new-password" placeholder="Confirmer le nouveau mot de passe"><button onclick="submitTemporaryPasswordChange()">Enregistrer mon nouveau mot de passe</button><p class="muted" id="forcedPasswordFeedback" aria-live="polite"></p>`;
+   return;
   }
   document.getElementById("login").classList.add("hidden");document.getElementById("app").classList.remove("hidden");
   const userLabel=document.querySelector(".topbar .user");if(userLabel)userLabel.textContent="👤 "+[currentProfile.prenom,currentProfile.nom].filter(Boolean).join(" ");

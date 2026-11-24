@@ -20,18 +20,20 @@
       <option value="surveillant">Surveillant</option>
       <option value="censeur">Censeur</option>
       <option value="direction">Directeur</option>
+      <option value="parent">Parent</option>
     </select>
     <div id="adminLoginFields">
       <input id="loginEmail" type="email" placeholder="Votre adresse e-mail" autocomplete="username">
       <input id="adminPass" type="password" placeholder="Votre mot de passe" autocomplete="current-password">
     </div>
     <div id="staffLoginFields" class="hidden">
+      <input id="loginParentPhone" class="hidden" type="tel" inputmode="tel" placeholder="Téléphone enregistré dans le dossier parent" autocomplete="tel">
       <input id="loginUser" type="text" placeholder="Nom" autocomplete="family-name">
       <input id="loginFirstName" type="text" placeholder="Prénom(s)" autocomplete="given-name">
       <input id="loginPass" type="password" placeholder="Votre mot de passe" autocomplete="current-password">
     </div>
     <button onclick="login()">Se connecter</button>
-    <small>La connexion par e-mail est réservée à l’administrateur général. Le personnel se connecte avec sa fonction, son nom, son prénom et son mot de passe.</small>
+    <small>La connexion par e-mail est réservée à l’administrateur général. Le personnel se connecte avec sa fonction, son nom et son prénom. Les parents utilisent leur numéro de téléphone enregistré et leur mot de passe.</small>
   </div>
 </div>
 
@@ -70,6 +72,7 @@
       <details class="nav-group"><summary>FINANCES</summary>
         <button data-page="payments" onclick="showPage('payments')">Frais de scolarité</button>
         <button data-page="finance-movements" onclick="showPage('finance-movements')">Mouvements et impayés</button>
+        <button data-page="support-fees" onclick="showPage('support-fees')">Photocopies/support — impayés par classe</button>
       </details>
       <details class="nav-group"><summary>ADMINISTRATION</summary>
         <button data-page="settings" onclick="showPage('settings')">Mon compte et paramètres</button>
@@ -102,5 +105,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="app.js"></script>
+<script src="support-fees.js"></script>
 </body>
 </html>

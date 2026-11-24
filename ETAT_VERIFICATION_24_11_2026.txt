@@ -1,0 +1,34 @@
+LA RÉFÉRENCE — RAPPORT DE CONTRÔLE ET D'ÉTAT
+Date : 24/11/2026
+
+CORRECTIONS FRONT-END INCLUSES DANS CETTE ARCHIVE
+- Choix de l'année scolaire avant la saisie des notes et pour l'impression des bulletins.
+- Matières affectées à une classe proposées dans les fiches de notes ; gestion des affectations depuis la classe.
+- Bulletins A4 bleu/jaune avec photo, QR de vérification et affichage public des notes, moyennes, coefficients et appréciations. Le QR est émis par la fonction bulletin-qr v3 active ; une nouvelle émission remplace le jeton précédent.
+- Moyenne annuelle du bulletin calculée selon MA=(2×MT3+((MT1+MT2)/2))/3.
+- Appel quotidien par classe ; date proposée automatiquement et modifiable ; les absences sont cochées, les autres élèves sont enregistrés présents.
+- Annuaire apprenants filtrable par année scolaire, classe et recherche ; totaux d'effectifs associés à l'année choisie.
+- Photocopies/supports distincts des frais de scolarité, paiements partiels, reçu séparé et réclamation par classe.
+- Reçus A4 et états journaliers réimprimables pour les cycles maternelle, primaire, secondaire et lycée.
+- Création/régularisation des échéanciers des apprenants actifs déjà inscrits : l'écran Finance affiche maintenant les dossiers de 0 à 6 tranches, et le RPC ajoute seulement les échéances manquantes sans remplacer les lignes existantes.
+- Création/réutilisation du dossier parent par téléphone et tentative d'invitation du compte parent via manage-access v9.
+- Corbeille disponible pour les notes et présences uniquement ; menu Photocopies/support en un seul exemplaire.
+
+CONTRÔLES EFFECTUÉS
+- Syntaxe JavaScript app.js et support-fees.js vérifiée avec node --check.
+- Intégrité de l'archive ZIP vérifiée.
+- Fonction Supabase bulletin-qr version 3 active ; manage-access version 9 active.
+- Migration Supabase de création/régularisation idempotente des échéanciers appliquée.
+- Supabase : 31 apprenants actifs avec échéancier et 0 actif sans échéancier lors du dernier comptage. Ce comptage ne certifie pas le nombre de lignes par échéancier.
+
+ÉLÉMENTS NON FINALISÉS / EXIGEANT UNE CONFIGURATION OU DES TESTS
+- Corbeille universelle : seules les notes et présences sont restaurables. Les autres tables comportent des relations et contraintes ; leur suppression/restauration doit être conçue par type pour éviter la perte de données financières ou pédagogiques.
+- Alertes Gmail : fournisseur SMTP/API et secrets d'envoi non fournis/configurés.
+- MFA administrateur : non activée ni testée sur le compte réel.
+- Protection Supabase contre les mots de passe compromis : encore désactivée dans Auth.
+- Security Advisor Supabase : 5 avertissements sur les fonctions SECURITY DEFINER exposées aux utilisateurs authentifiés. Les droits ne doivent pas être supprimés sans vérifier les appels nécessaires de l'application.
+- Aucun test bout en bout avec comptes réels : rôles, paiements, annulations, reçus A4, bulletins/QR scanné, transferts, accès parent, mobile et ordinateur.
+- Aucun déploiement GitHub/Vercel effectué par cette intervention.
+
+AVANT UTILISATION AVEC DES DONNÉES RÉELLES
+Sauvegarder la production et tester avec des comptes dédiés de chaque rôle. Vérifier notamment qu'un QR de bulletin affiche le bon apprenant et la bonne période et qu'une réimpression révoque l'ancien QR.

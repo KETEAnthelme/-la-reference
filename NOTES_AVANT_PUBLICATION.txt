@@ -1,0 +1,15 @@
+LA RÉFÉRENCE — VERSION CANDIDATE À LA PUBLICATION
+
+Cette archive contient les corrections front-end et les migrations Supabase documentées dans ETAT_VERIFICATION_24_11_2026.txt.
+
+Points nouvellement corrigés dans cette version :
+- Finance affiche les apprenants actifs ayant moins de sept tranches, y compris les échéanciers partiels.
+- Le bouton individuel indique « Compléter les tranches » pour les échéanciers partiels.
+- Les bulletins réémettent un QR sécurisé via bulletin-qr v3 et incluent les notes, moyennes, coefficients et appréciations dans la page de vérification.
+- La moyenne annuelle du bulletin suit MA=(2×MT3+((MT1+MT2)/2))/3.
+
+La migration de régularisation des échéanciers a déjà été appliquée au projet Supabase bsmrwupcbhwoquwjdtvi. Ne pas réappliquer manuellement des scripts SQL de manière aveugle.
+
+Éléments qui nécessitent encore une configuration ou des tests : corbeille universelle, alertes Gmail, MFA administrateur, protection des mots de passe compromis, avertissements SECURITY DEFINER et tests bout en bout. Voir le rapport d'état.
+
+Avant l'utilisation réelle : sauvegarder la production et tester les rôles, inscriptions, tranches partielles, paiements, annulations, reçus A4, bulletins et QR scannés, transferts et espace parent sur téléphone et ordinateur.

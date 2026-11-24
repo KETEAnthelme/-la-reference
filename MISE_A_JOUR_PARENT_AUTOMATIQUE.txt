@@ -1,13 +1,12 @@
-LA RÉFÉRENCE — MISE À JOUR DES COMPTES PARENTS
+LA RÉFÉRENCE — COMPTES PARENTS
 
-Contenu :
-- app.js : rattachement automatique de l'enfant à un dossier parent existant lorsque le téléphone et l'établissement correspondent ; sinon création du dossier.
-- Un compte parent actif existant est réutilisé pour les enfants suivants.
-- Si aucun compte n'existe, l'application demande la création du compte via la fonction Supabase manage-access.
-- L'identifiant et le mot de passe provisoire sont affichés après création. Le parent doit changer son mot de passe à la première connexion.
+Le parcours d'inscription contient la logique suivante :
+- Recherche d'un dossier parent dans le même établissement à partir du téléphone normalisé.
+- Réutilisation du dossier parent et de son compte actif pour les frères et sœurs.
+- Si aucun compte actif n'est lié, appel de la fonction manage-access pour créer le compte parent.
+- L'identifiant et le mot de passe provisoire sont affichés si la création réussit ; le parent doit changer le mot de passe à la première connexion.
+- Si la création du compte échoue (droits, doublon ou erreur technique), le dossier parent et le lien enfant-parent sont conservés et un message demande à l'administration d'activer l'accès depuis Gestion des accès.
 
-Publication :
-- La fonction Supabase manage-access version 8 a été déployée avec succès.
-- Le fichier app.js corrigé doit encore être publié sur le dépôt GitHub/Vercel pour que le site public utilise cette nouveauté.
+La fonction Supabase manage-access version 9 est ACTIVE. Elle autorise la création parent pour les rôles définis dans la fonction et vérifie l'appartenance à l'établissement pour les utilisateurs non administrateurs généraux.
 
-Important : la création automatique via l'écran d'inscription nécessite que l'utilisateur connecté soit administrateur général, car la fonction manage-access conserve cette restriction de sécurité. Si le secrétariat effectue les inscriptions, l'administrateur devra activer le compte parent depuis Gestion des accès, à moins d'ajouter ensuite une autorisation limitée et vérifiée pour le secrétariat.
+À tester avant utilisation réelle : inscription par secrétariat, inscription par administrateur général, parent avec plusieurs enfants, téléphone déjà utilisé, téléphone vide ou mal saisi, connexion parent et changement du mot de passe provisoire.

@@ -1,14 +1,13 @@
-LA RÉFÉRENCE — COMPTES PARENTS AUTOMATIQUES
+LA RÉFÉRENCE — MISE À JOUR DES COMPTES PARENTS
 
-Comportement après publication de cette version :
-- À l'inscription d'un élève, le système recherche le dossier parent par téléphone et établissement.
-- Si le parent existe, le nouvel élève lui est rattaché ; un compte actif existant est réutilisé.
-- Sinon, un dossier parent et un compte parent sont créés automatiquement.
-- L'identifiant et le mot de passe provisoire sont affichés à l'agent après l'inscription pour remise au parent.
-- Le parent doit changer le mot de passe à sa première connexion.
-- Le téléphone du parent est obligatoire dès qu'un nom de parent est renseigné, afin de garantir la connexion.
-- La fonction manage-access version 9 autorise les rôles actifs du personnel à créer l'accès parent uniquement pour un établissement auquel ils sont affectés ; elle refuse les doublons de comptes parents actifs.
+Contenu :
+- app.js : rattachement automatique de l'enfant à un dossier parent existant lorsque le téléphone et l'établissement correspondent ; sinon création du dossier.
+- Un compte parent actif existant est réutilisé pour les enfants suivants.
+- Si aucun compte n'existe, l'application demande la création du compte via la fonction Supabase manage-access.
+- L'identifiant et le mot de passe provisoire sont affichés après création. Le parent doit changer son mot de passe à la première connexion.
 
 Publication :
-- La fonction Supabase manage-access version 9 est active.
-- Le fichier app.js inclus doit encore être publié sur Vercel pour activer ce parcours sur le site public.
+- La fonction Supabase manage-access version 8 a été déployée avec succès.
+- Le fichier app.js corrigé doit encore être publié sur le dépôt GitHub/Vercel pour que le site public utilise cette nouveauté.
+
+Important : la création automatique via l'écran d'inscription nécessite que l'utilisateur connecté soit administrateur général, car la fonction manage-access conserve cette restriction de sécurité. Si le secrétariat effectue les inscriptions, l'administrateur devra activer le compte parent depuis Gestion des accès, à moins d'ajouter ensuite une autorisation limitée et vérifiée pour le secrétariat.

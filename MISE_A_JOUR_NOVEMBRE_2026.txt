@@ -1,0 +1,17 @@
+LA REFERENCE — MISE A JOUR DU 24/11/2026
+
+Modifications incluses dans cette archive :
+1. Présences et absences : appel quotidien par classe ; la date du jour est proposée automatiquement et reste modifiable ; tous les élèves actifs de la classe apparaissent ; seules les absences sont cochées ; l'enregistrement marque les autres élèves présents et met à jour un pointage déjà existant pour la même date.
+2. Apprenants : filtre par année scolaire alimenté par les années enregistrées dans l'établissement ; les totaux d'effectifs et les soldes affichés correspondent à l'année choisie.
+3. Finances et impayés : suppression des quatre cartes de totaux en haut de page uniquement. Les données et les fonctions de gestion des paiements ne sont pas supprimées.
+4. Photocopies/support : conservation des champs de paiement facultatif séparé à l'inscription et dans Finance. Le montant est saisi selon ce que le parent verse réellement et reste plafonné au solde photocopies/support disponible ; il n'est pas ajouté aux frais de contribution.
+5. Reçu séparé de photocopies/support et reçu de contribution conservés.
+
+PUBLICATION :
+- Extraire le ZIP.
+- Dans GitHub, ouvrir KETEAnthelme/la-reference, branche main.
+- Remplacer les fichiers correspondants à la racine du dépôt par ceux du dossier extrait (notamment app.js).
+- Commit changes, puis attendre le déploiement Production READY sur Vercel.
+- Après publication, tester l'appel d'une classe, le filtre année scolaire, la rubrique Finance et un paiement photocopies.
+
+Important : l'archive ne contient pas de changement de base Supabase. Elle modifie l'application web. Les autorisations Supabase déjà corrigées restent séparées.

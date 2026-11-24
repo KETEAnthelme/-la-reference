@@ -1,0 +1,9 @@
+{
+  "cleanUrls": false,
+  "trailingSlash": false,
+  "headers": [
+    { "source": "/app.js", "headers": [{ "key": "Cache-Control", "value": "public, max-age=300" }] },
+    { "source": "/style.css", "headers": [{ "key": "Cache-Control", "value": "public, max-age=300" }] },
+    { "source": "/accueil-classe.jpg", "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }] }
+  ]
+}

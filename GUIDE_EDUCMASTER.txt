@@ -1,0 +1,55 @@
+GROUPE SCOLAIRE LA RÉFÉRENCE
+GUIDE DE TRANSFERT DES NOTES VERS EDUCMASTER
+
+IMPORTANT
+Le fichier exporté par LA RÉFÉRENCE est un tableau de contrôle des notes existantes. Il ne doit pas être importé comme modèle officiel tant que la structure n'a pas été comparée au modèle Excel vierge téléchargé depuis le compte de l'établissement EducMaster.
+Ne jamais modifier les notes dans LA RÉFÉRENCE pour préparer un transfert. Ne jamais inventer un matricule ou un numéro EducMaster.
+
+ÉTAPE 1 — PRÉPARER LA RÉFÉRENCE
+1. Vérifier que l'année scolaire, l'établissement, la classe, la période et la matière sont corrects.
+2. Vérifier que chaque élève possède le numéro matricule attendu par EducMaster. Vérifier aussi le numéro EducMaster lorsqu'il existe.
+3. Ouvrir ÉDITION > NOTES POUR EDUCMASTER.
+4. Choisir la période, la classe et la matière.
+5. Contrôler les notes affichées avec le cahier de notes/la fiche de notes de la classe.
+6. Exporter le tableau de contrôle et conserver une copie datée.
+7. Corriger les données dans LA RÉFÉRENCE si une erreur est détectée, puis réexporter le tableau de contrôle.
+
+ÉTAPE 2 — OBTENIR LE VRAI MODÈLE EDUCMASTER
+1. Se connecter au bon sous-système EducMaster (secondaire ou primaire selon le cycle concerné), avec le compte officiel de l'établissement.
+2. Ouvrir le module/écran d'importation des notes.
+3. Télécharger le modèle Excel vierge proposé par EducMaster pour la classe, la période et le type d'évaluation concernés.
+4. Ne pas renommer les feuilles, supprimer les colonnes, déplacer les en-têtes, fusionner les cellules ou changer les formats du modèle.
+5. Faire une copie de sauvegarde du modèle vierge avant remplissage.
+
+ÉTAPE 3 — REPORTER LES NOTES SANS ERREUR
+1. Faire correspondre les élèves avec le matricule officiel, pas uniquement avec le nom/prénom.
+2. Reporter les notes depuis le tableau de contrôle vers les colonnes correspondantes du modèle officiel.
+3. Conserver exactement les en-têtes, l'ordre des colonnes, les noms des feuilles et les formats attendus par EducMaster.
+4. Laisser vide une donnée réellement absente. Ne pas saisir 0 pour remplacer une note manquante, sauf instruction explicite du modèle officiel.
+5. Vérifier les notes, coefficients, matières, classe, période et identité de chaque élève.
+6. Enregistrer une copie du fichier final sous un nouveau nom. Garder le modèle vierge intact.
+
+ÉTAPE 4 — IMPORTER DANS EDUCMASTER
+Selon le Guide utilisateur EducMaster/MESTFP v2024.12, section 2.8, cas CP-08-001 :
+1. Dans EducMaster, ouvrir « Mes élèves », puis « Importation des notes ».
+2. Renseigner tous les champs obligatoires.
+3. Importer le fichier Excel préparé à partir du modèle téléchargé.
+4. Choisir la feuille qui contient les informations à importer.
+5. Cliquer sur « Afficher ».
+6. Vérifier attentivement les informations importées.
+7. Cliquer sur « Enregistrer » uniquement si l'aperçu est correct.
+
+CONTRÔLE APRÈS IMPORT
+- Rechercher quelques élèves au début, au milieu et à la fin de la liste.
+- Comparer leurs notes dans EducMaster avec le tableau de contrôle exporté de LA RÉFÉRENCE.
+- Vérifier qu'aucune note n'a été associée au mauvais élève ou à la mauvaise matière/période.
+- Archiver le fichier envoyé, le tableau de contrôle et la date de l'import.
+
+RÈGLE DE SÉCURITÉ
+Faire d'abord un essai avec une classe/période autorisée et un petit lot si EducMaster le permet. Ne pas lancer un import global si l'aperçu comporte des erreurs. En cas de doute, arrêter avant « Enregistrer » et demander confirmation au gestionnaire EducMaster.
+
+RÉFÉRENCE OFFICIELLE
+Guide utilisateur EducMaster/MESTFP v2024.12, section 2.8, pages 27-28 :
+https://www.base.educmaster.bj/guide/20240613_Guide-utilisateur_MESTFP.pdf
+
+Limite : le guide public décrit le processus, mais ne fournit pas ici le modèle Excel vierge propre à votre établissement/classe. Pour garantir un transfert strictement conforme, il faudra comparer le fichier export de contrôle au modèle vierge téléchargé depuis votre compte EducMaster.

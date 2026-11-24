@@ -1,0 +1,38 @@
+GROUPE SCOLAIRE LA RÉFÉRENCE — PAQUET DE PUBLICATION
+
+CONTENU
+- index.html : écran de connexion et navigation
+- app.js : logique de l'application
+- style.css : interface responsive
+- accueil-classe.jpg : image d'accueil
+- vercel.json : en-têtes de cache pour Vercel
+- firebase.json : configuration Firebase conservée pour référence
+- GUIDE_EDUCMASTER.txt : procédure de préparation et de transfert contrôlé
+
+PUBLICATION SUR VERCEL (SANS GITHUB NI LIGNE DE COMMANDE)
+1. Sur un ordinateur, ouvrir https://vercel.com/drop et se connecter au compte Vercel.
+2. Décompresser ce ZIP dans un dossier nommé LA_REFERENCE.
+3. Déposer le dossier du site (contenant directement index.html, app.js, style.css et accueil-classe.jpg) dans Vercel Drop.
+4. Choisir l'équipe propriétaire du projet et un nom de projet, par exemple la-reference.
+5. Lancer Deploy et attendre l'état Ready.
+6. Ouvrir l'URL *.vercel.app fournie et vérifier la connexion, les menus et les pages.
+7. Ne pas communiquer publiquement les comptes ou mots de passe de l'école.
+
+IMPORTANT : si vous préférez remplacer un projet Vercel existant, vérifiez d'abord son nom et son contenu. Ne supprimez aucun ancien projet ni dépôt. La publication de ce paquet crée un déploiement statique ; elle ne migre pas la base Supabase et ne change pas les données.
+
+DOMAINE PERSONNALISÉ
+1. Acheter le nom de domaine au nom de l'établissement, dans un compte dont la Direction conserve l'accès.
+2. Dans Vercel > projet > Settings > Domains, ajouter le domaine acheté (ex. domaine.bj et www.domaine.bj).
+3. Copier exactement les enregistrements DNS affichés par Vercel dans le compte du bureau d'enregistrement.
+4. Attendre la vérification DNS et le certificat HTTPS. Ne pas inventer les valeurs DNS : elles dépendent du domaine et du projet.
+5. Choisir un domaine court, sans accent, facile à dicter et à retenir. Vérifier sa disponibilité avant paiement.
+
+DONNÉES ET SÉCURITÉ
+- Ne pas réinitialiser Supabase et ne pas supprimer les tables existantes.
+- La clé Supabase intégrée est une clé publique de client (publishable/anon), pas une clé service_role. Ne jamais mettre une clé service_role dans app.js.
+- Avant la mise en production, tester les comptes et les droits de chaque rôle, la séparation Siège/Annexes, la création et la réimpression des reçus, les impayés, les notes et les bulletins.
+- Vérifier les politiques RLS Supabase pour toutes les tables accessibles depuis le navigateur.
+- Faire une sauvegarde Supabase avant les changements de schéma ou les imports de données.
+
+VALIDATION
+La syntaxe JavaScript et l'intégrité de l'archive ont été vérifiées. Cela ne remplace pas un test connecté à vos comptes réels, un test d'impression sur votre imprimante, ni une validation des permissions en production.

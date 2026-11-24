@@ -1,0 +1,14 @@
+LA RÉFÉRENCE — COMPTES PARENTS AUTOMATIQUES
+
+Comportement après publication de cette version :
+- À l'inscription d'un élève, le système recherche le dossier parent par téléphone et établissement.
+- Si le parent existe, le nouvel élève lui est rattaché ; un compte actif existant est réutilisé.
+- Sinon, un dossier parent et un compte parent sont créés automatiquement.
+- L'identifiant et le mot de passe provisoire sont affichés à l'agent après l'inscription pour remise au parent.
+- Le parent doit changer le mot de passe à sa première connexion.
+- Le téléphone du parent est obligatoire dès qu'un nom de parent est renseigné, afin de garantir la connexion.
+- La fonction manage-access version 9 autorise les rôles actifs du personnel à créer l'accès parent uniquement pour un établissement auquel ils sont affectés ; elle refuse les doublons de comptes parents actifs.
+
+Publication :
+- La fonction Supabase manage-access version 9 est active.
+- Le fichier app.js inclus doit encore être publié sur Vercel pour activer ce parcours sur le site public.

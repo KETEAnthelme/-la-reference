@@ -1473,6 +1473,7 @@ async function saveForm(type){
  const isEdit=!!(editingRecord&&editingRecord.type===type&&editingRecord.id!=null);
  const registrationAmount=type==="student"&&!isEdit?Number(val("f_registration_amount")||0):0;
  if(type==="student"&&!isEdit&&(!Number.isFinite(registrationAmount)||registrationAmount<0)){alert("Le montant payé à l’inscription doit être positif ou nul.");return}
+ if(type==="student"&&!isEdit&&val("f_parent_last").trim()&&!val("f_parent_phone").trim()){alert("Le téléphone du parent est obligatoire pour créer automatiquement son compte et lui permettre de se connecter.");return}
  const registrationMode=type==="student"?val("f_registration_mode")||"Espèces":"Espèces";
  const receiptWindow=type==="student"&&!isEdit&&registrationAmount>0?window.open("about:blank","_blank"):null;
  const site=val("f_site")||activeSiteId;let row={},table="";
@@ -1492,15 +1493,37 @@ async function saveForm(type){
  const {data:savedRows,error}=await request;if(error)throw error;
  let scheduleNotice="",registrationReceipt=null;
  let registrationScheduleReady=false;
- // Créer automatiquement la fiche parent et le lien avec l’apprenant si les coordonnées sont fournies.
+ // Un même parent (même téléphone, même établissement) conserve un seul dossier et un seul accès pour tous ses enfants.
  if(type==="student"&&!isEdit&&savedRows?.[0]?.id&&val("f_parent_last").trim()){
-  const parentRow={nom:val("f_parent_last").trim(),prenoms:val("f_parent_first").trim()||"",telephone:val("f_parent_phone").trim()||null,email:val("f_parent_email").trim()||null,etablissement_id:site};
-  const {data:parentRows,error:parentError}=await supabaseClient.from("parents").insert(parentRow).select("id");
-  if(parentError){scheduleNotice+=" La fiche de l’apprenant est créée, mais la fiche parent n’a pas pu être créée : "+parentError.message;}
-  else if(parentRows?.[0]?.id){
-   const {error:linkError}=await supabaseClient.from("eleves_parents").insert({eleve_id:Number(savedRows[0].id),parent_id:Number(parentRows[0].id),lien:val("f_parent_link")||"Tuteur",etablissement_id:site});
-   if(linkError)scheduleNotice+=" Fiche parent créée, mais liaison à l’apprenant à vérifier : "+linkError.message;
-   else scheduleNotice+=" Fiche parent créée et liée à l’apprenant. Après import du numéro ÉducMaster, le compte parent pourra être activé depuis Gestion des accès.";
+  const phone=val("f_parent_phone").trim();
+  const normalizePhone=v=>String(v||"").replace(/\D/g,"");
+  const parentRow={nom:val("f_parent_last").trim(),prenoms:val("f_parent_first").trim()||"",telephone:phone||null,email:val("f_parent_email").trim()||null,etablissement_id:site};
+  let parentId=null;
+  if(phone){
+   const {data:knownParents,error:findParentError}=await supabaseClient.from("parents").select("id,telephone").eq("etablissement_id",site).not("telephone","is",null);
+   if(findParentError) scheduleNotice+=" Recherche du dossier parent impossible : "+findParentError.message;
+   else parentId=(knownParents||[]).find(p=>normalizePhone(p.telephone)===normalizePhone(phone))?.id||null;
+  }
+  if(!parentId){
+   const {data:parentRows,error:parentError}=await supabaseClient.from("parents").insert(parentRow).select("id");
+   if(parentError)scheduleNotice+=" La fiche de l’apprenant est créée, mais la fiche parent n’a pas pu être créée : "+parentError.message;
+   else parentId=parentRows?.[0]?.id||null;
+  }
+  if(parentId){
+   const {data:existingLink,error:checkLinkError}=await supabaseClient.from("eleves_parents").select("parent_id").eq("eleve_id",Number(savedRows[0].id)).eq("parent_id",Number(parentId)).maybeSingle();
+   let linkError=checkLinkError;
+   if(!linkError&&!existingLink){const result=await supabaseClient.from("eleves_parents").insert({eleve_id:Number(savedRows[0].id),parent_id:Number(parentId),lien:val("f_parent_link")||"Tuteur",etablissement_id:site});linkError=result.error;}
+   if(linkError)scheduleNotice+=" Dossier parent trouvé, mais liaison à vérifier : "+linkError.message;
+   else {
+    const {data:accountLinks,error:accountError}=await supabaseClient.from("parent_comptes").select("utilisateur_id").eq("parent_id",Number(parentId)).eq("actif",true);
+    if(accountError)scheduleNotice+=" Enfant lié au parent, mais vérification du compte impossible : "+accountError.message;
+    else if(accountLinks?.length)scheduleNotice+=" Enfant rattaché au compte parent déjà existant. Ce parent pourra consulter ses enfants avec le même accès.";
+    else {
+     const {data:createdAccount,error:createError}=await supabaseClient.functions.invoke("manage-access",{body:{action:"invite",nom:parentRow.nom,prenom:parentRow.prenoms||"Parent",email:parentRow.email||"",role:"parent",etablissement_ids:[],parent_id:Number(parentId)}});
+     if(createError||!createdAccount?.ok)scheduleNotice+=" Dossier parent créé et enfant lié. Création du compte automatique non finalisée : "+(createdAccount?.error||createError?.message||"droits administrateur requis")+". L’administrateur doit activer l’accès dans Gestion des accès.";
+     else scheduleNotice+=" COMPTE PARENT CRÉÉ — Identifiant : "+createdAccount.login_code+" ; mot de passe provisoire : "+createdAccount.temporary_password+". À remettre au parent : il devra changer ce mot de passe à sa première connexion.";
+    }
+   }
   }
  }
  if(type==="student"&&!isEdit&&row.classe_id&&savedRows?.[0]?.id){

@@ -32,3 +32,11 @@ CONTRÔLES EFFECTUÉS
 
 AVANT UTILISATION AVEC DES DONNÉES RÉELLES
 Sauvegarder la production et tester avec des comptes dédiés de chaque rôle. Vérifier notamment qu'un QR de bulletin affiche le bon apprenant et la bonne période et qu'une réimpression révoque l'ancien QR.
+
+
+CORRECTION LISTE PAR CLASSE — 25/11/2026
+- Ajout du téléphone du parent/tuteur dans la liste par classe (relation élève-parent).
+- Ajout du total dû, total payé et reste à payer calculés depuis les échéanciers de l'année scolaire active.
+- Les mêmes colonnes sont incluses dans l'export CSV et l'impression A4 paysage.
+- Recherche de la liste par classe inclut le téléphone du parent.
+- Aucun enregistrement financier n'a été supprimé ou modifié par cette correction d'interface.

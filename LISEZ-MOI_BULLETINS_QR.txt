@@ -1,0 +1,10 @@
+MISE A JOUR — BULLETINS ET QR CODE
+
+Cette version transmet les données pédagogiques minimales du bulletin à la fonction sécurisée bulletin-qr.
+Le QR code ouvre une page publique de consultation qui affiche le nom de l'apprenant, la classe, le matricule, le numéro EducMaster, les matières, les notes, les moyennes, les coefficients et les appréciations, ainsi que la mention d'authenticité.
+
+La fonction Supabase bulletin-qr version 3 et la colonne public.bulletins.contenu_public ont déjà été déployées sur le projet Supabase.
+
+Pour publier l'interface : remplacer les fichiers du projet GitHub par ceux de cette archive (notamment app.js, index.html, style.css, support-fees.js et accueil-classe.jpg), puis valider le commit. Vercel lancera ensuite le déploiement automatiquement.
+
+IMPORTANT : le QR code donne accès au bulletin à toute personne qui le scanne. Ne le publier que sur les exemplaires destinés aux personnes autorisées. Les parents ne disposent toujours pas d'un accès parent à la plateforme ; le QR code est un lien public de consultation.

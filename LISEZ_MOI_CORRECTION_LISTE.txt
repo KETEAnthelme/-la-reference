@@ -1,0 +1,15 @@
+LA RÉFÉRENCE — CORRECTION LISTE DES APPRENANTS
+
+Fichier modifié : app.js
+
+Corrections :
+1. Impression de la liste des apprenants en A4 paysage avec marges réduites, tableau élargi et hauteur des lignes adaptée à l'effectif afin de mieux occuper la page.
+2. À l'inscription, la fiche parent est désormais créée dès qu'un téléphone parent est renseigné, même si le nom du parent a été laissé vide. Le nom générique « Parent / tuteur » est utilisé dans ce seul cas.
+3. Le lien parent-apprenant existant est conservé et le numéro est récupéré depuis la fiche parent liée.
+
+Installation :
+- Remplacer le fichier app.js à la racine du projet par celui de cette archive.
+- Ne pas supprimer ni remplacer les autres fichiers du projet.
+- Publier ensuite le projet depuis le dépôt GitHub habituel.
+
+Limite importante : les anciennes inscriptions dont les numéros n'ont jamais été enregistrés dans la table parents et qui n'ont aucun lien parent-apprenant ne peuvent pas être reconstituées par cette correction. Les numéros déjà présents dans les fiches parents liées seront affichés. Les nouvelles inscriptions enregistreront le parent dès qu'un numéro est saisi.

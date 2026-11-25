@@ -252,7 +252,7 @@ function editionActiveStudents(classId=''){
 }
 function editionSexCounts(students){const girls=students.filter(s=>String(s.sex||'').toLowerCase().startsWith('f')).length;return {girls,boys:students.length-girls,total:students.length};}
 function editionCsv(filename,headers,rows){const csv='\uFEFF'+[headers,...rows].map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;a.click();URL.revokeObjectURL(a.href);}
-function editionPrint(title,headers,rows,landscape=false){const w=window.open('','_blank');if(!w)return alert('Autorisez les fenêtres contextuelles pour imprimer.');const th=headers.map(x=>`<th>${esc(x)}</th>`).join(''),tr=rows.map(r=>`<tr>${r.map(v=>`<td>${esc(v??'')}</td>`).join('')}</tr>`).join('');w.document.write(`<!doctype html><html lang="fr"><meta charset="utf-8"><title>${esc(title)}</title><style>@page{size:A4 ${landscape?'landscape':'portrait'};margin:10mm}body{font:10pt Arial;color:#172338}h2,h3{text-align:center;margin:4px}.meta{margin:12px 0}table{width:100%;border-collapse:collapse;margin-top:12px}th,td{border:1px solid #64748b;padding:5px;text-align:left}th{background:#eaf0f7}tr{break-inside:avoid}</style><h2>GROUPE SCOLAIRE LA RÉFÉRENCE</h2><h3>${esc(currentSite()?.nom||'')}</h3><h3>${esc(title)}</h3><p class="meta">Année scolaire : ${esc(currentSchoolYear())}</p><table><thead><tr>${th}</tr></thead><tbody>${tr||`<tr><td colspan="${headers.length}">Aucune donnée</td></tr>`}</tbody></table><script>window.onload=()=>setTimeout(()=>window.print(),200)<\/script></html>`);w.document.close();}
+function editionPrint(title,headers,rows,landscape=false){const w=window.open('','_blank');if(!w)return alert('Autorisez les fenêtres contextuelles pour imprimer.');const th=headers.map(x=>`<th>${esc(x)}</th>`).join(''),tr=rows.map(r=>`<tr>${r.map(v=>`<td>${esc(v??'')}</td>`).join('')}</tr>`).join(''),rowHeight=rows.length?Math.max(5,Math.min(11,Math.floor(132/rows.length))):7;w.document.write(`<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>${esc(title)}</title><style>@page{size:A4 ${landscape?'landscape':'portrait'};margin:6mm}*{box-sizing:border-box}html,body{margin:0;padding:0;width:100%;font-family:Arial,sans-serif;color:#172338}body{font-size:8pt}h2,h3{text-align:center;margin:2px 0}h2{font-size:13pt}h3{font-size:10pt}.meta{margin:5px 0 7px;font-size:8pt}table{width:100%;height:calc(100vh - 34mm);border-collapse:collapse;table-layout:auto;margin:0}thead{display:table-header-group}th,td{border:1px solid #64748b;padding:3px 4px;text-align:left;vertical-align:middle;overflow-wrap:anywhere}th{background:#eaf0f7;font-size:7.5pt}td{font-size:7.5pt}tbody tr{height:${rowHeight}mm;break-inside:avoid}tr{break-inside:avoid} @media screen{body{padding:6mm}table{height:auto;min-height:170mm}}</style></head><body><h2>GROUPE SCOLAIRE LA RÉFÉRENCE</h2><h3>${esc(currentSite()?.nom||'')}</h3><h3>${esc(title)}</h3><p class="meta">Année scolaire : ${esc(currentSchoolYear())} · Effectif : ${rows.length}</p><table><thead><tr>${th}</tr></thead><tbody>${tr||`<tr><td colspan="${headers.length}">Aucune donnée</td></tr>`}</tbody></table><script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script></body></html>`);w.document.close();}
 function editionRosterPage(){
  const students=editionActiveStudents(),counts=editionSexCounts(students);
  return pageShell('Liste par classe','Liste nominative filtrée par établissement, année scolaire et classe. Impression et exportation.','','',`<div class="card"><div class="form-grid">${editionClassFilter()}<label>Recherche<input id="editionSearch" type="search" placeholder="Matricule, nom, téléphone…" oninput="refreshEditionView()"></label></div><div class="cards" id="editionCounts">${stat('Nombre de filles',counts.girls)}${stat('Nombre de garçons',counts.boys)}${stat('Effectif total',counts.total)}</div><div class="toolbar"><label>Afficher<select id="editionPageSize" onchange="refreshEditionView()"><option>10</option><option>25</option><option>50</option><option value="1000">Tout</option></select></label><button class="btn light" onclick="exportEditionRoster()">Exporter</button><button class="btn light" onclick="printEditionRoster()">Imprimer</button></div><div class="table-wrap"><table class="table"><thead><tr><th>N°</th><th>Matricule</th><th>Nom & Prénoms</th><th>Sexe</th><th>Téléphone apprenant</th><th>Téléphone parent</th><th>Total dû (FCFA)</th><th>Total payé (FCFA)</th><th>Reste (FCFA)</th><th>Date d'inscription</th></tr></thead><tbody id="editionRosterRows"></tbody></table></div><p class="muted" id="editionRosterCount"></p></div>`);
@@ -1441,6 +1441,7 @@ function toggleLoginFields(){
  document.getElementById("adminLoginFields").classList.toggle("hidden",!admin);
  document.getElementById("staffLoginFields").classList.toggle("hidden",admin);
  document.getElementById("loginUser").classList.toggle("hidden",parent);
+ document.getElementById("loginFirstName").classList.toggle("hidden",parent);
  document.getElementById("loginParentPhone")?.classList.toggle("hidden",!parent);
 }
 async function submitTemporaryPasswordChange(){
@@ -1465,9 +1466,9 @@ async function login(){
    if(!email||!password)throw new Error("Saisissez votre adresse e-mail et votre mot de passe administrateur.");
    const {error}=await supabaseClient.auth.signInWithPassword({email,password});if(error)throw error;
   }else{
-   const identifiant=val("loginUser").trim(),password=val("loginPass"),telephone=val("loginParentPhone")?.trim()||"";
-   if(!password||(isParent?!telephone:!/^AG\d{6}$/i.test(identifiant)))throw new Error(isParent?"Saisissez votre numéro de téléphone et votre mot de passe.":"Saisissez votre numéro AG (ex. AG100013) et votre mot de passe.");
-   const {data,error}=await supabaseClient.functions.invoke("login-by-name",{body:isParent?{role:"parent",telephone,password}:{login_code:identifiant.toUpperCase(),password,role:selectedRole}});
+   const nom=val("loginUser").trim(),prenom=val("loginFirstName").trim(),password=val("loginPass"),telephone=val("loginParentPhone")?.trim()||"";
+   if(!password||(isParent?!telephone:(!nom||!prenom)))throw new Error(isParent?"Saisissez votre numéro de téléphone et votre mot de passe.":"Saisissez votre nom, votre prénom et votre mot de passe.");
+   const {data,error}=await supabaseClient.functions.invoke("login-by-name",{body:isParent?{role:"parent",telephone,password}:{nom,prenom,password,role:selectedRole}});
    if(error||data?.error)throw new Error(data?.error||error?.message||"Connexion impossible.");
    mustChangePassword=data.must_change_password===true;
    const {error:sessionError}=await supabaseClient.auth.setSession({access_token:data.access_token,refresh_token:data.refresh_token});if(sessionError)throw sessionError;
@@ -1577,10 +1578,10 @@ async function saveForm(type){
  let scheduleNotice="",registrationReceipt=null,registrationSupportCollected=0,registrationSupportRefs=[];
  let registrationScheduleReady=false;
  // Un même parent (même téléphone, même établissement) conserve un seul dossier et un seul accès pour tous ses enfants.
- if(type==="student"&&!isEdit&&savedRows?.[0]?.id&&val("f_parent_last").trim()){
+ if(type==="student"&&!isEdit&&savedRows?.[0]?.id&&(val("f_parent_last").trim()||val("f_parent_phone").trim())){
   const phone=val("f_parent_phone").trim();
   const normalizePhone=v=>String(v||"").replace(/\D/g,"");
-  const parentRow={nom:val("f_parent_last").trim(),prenoms:val("f_parent_first").trim()||"",telephone:phone||null,email:val("f_parent_email").trim()||null,etablissement_id:site};
+  const parentRow={nom:val("f_parent_last").trim()||"Parent / tuteur",prenoms:val("f_parent_first").trim()||"",telephone:phone||null,email:val("f_parent_email").trim()||null,etablissement_id:site};
   let parentId=null;
   if(phone){
    const {data:knownParents,error:findParentError}=await supabaseClient.from("parents").select("id,telephone").eq("etablissement_id",site).not("telephone","is",null);

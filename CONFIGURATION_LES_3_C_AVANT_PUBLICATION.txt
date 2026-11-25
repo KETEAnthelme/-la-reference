@@ -1,0 +1,20 @@
+LA RÉFÉRENCE — CONFIGURATION LES 3 C
+
+Cette livraison ajoute dans Gestion des accès un bouton de configuration unique réservé à l’Administrateur général.
+
+CE QUE FAIT LE BOUTON
+- Crée un seul compte « LES 3 C » (Communication, Concertation, Consensus), avec le rôle Direction.
+- Affecte ce compte au Siège, à l’Annexe 1 et à l’Annexe 2.
+- Le rôle Direction a accès aux rubriques de gestion pédagogique, administrative et financière, mais pas à Paramètres, Gestion des accès ni Corbeille générale.
+- Désactive les autres comptes du personnel (sans toucher au compte Administrateur général ni aux comptes Parent).
+- Ne supprime aucune fiche d’élève, parent, paiement, note ou historique.
+- Génère un identifiant AG et un mot de passe provisoire affichés une seule fois à la fin de l’opération.
+
+IMPORTANT — SERVICE SUPABASE
+La fonction sécurisée manage-access version 10 a déjà été déployée sur le projet Supabase bsmrwupcbhwoquwjdtvi. Elle attend l’action setup_single_secondary appelée par le bouton ajouté dans app.js.
+
+PUBLICATION
+Remplacez le fichier app.js du projet par celui de cette archive, puis publiez le projet sur Vercel comme d’habitude. Après publication, connectez-vous avec le compte Administrateur général, ouvrez Gestion des accès et cliquez UNE SEULE FOIS sur « Créer LES 3 C et désactiver les anciens comptes ». Vérifiez le résultat affiché et conservez l’identifiant et le mot de passe provisoire en lieu sûr.
+
+PRÉCAUTION
+Ne cliquez pas plusieurs fois. Si le compte Direction LES 3 C existe déjà, la fonction bloque une seconde création. Les comptes désactivés restent conservés dans la base pour préserver l’historique et les références.

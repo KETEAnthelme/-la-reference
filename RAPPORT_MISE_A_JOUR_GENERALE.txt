@@ -1,0 +1,29 @@
+LA RÉFÉRENCE — MISE À JOUR GÉNÉRALE INTÉGRÉE — 25/11/2026
+
+BASE DE TRAVAIL
+- Archive complète CORRIGE_ACCES_SITES_V2 du 25/11/2026.
+- Correctif PARENTS_ET_LISTE_V2 intégré dans le formulaire élève et l'enregistrement des contacts.
+- Corrections des listes par classe, montants, impressions et accès conservées depuis les archives précédentes.
+
+CORRECTIONS INTÉGRÉES DANS CETTE VERSION
+- Accès multi-établissements et déduplication des établissements/affectations.
+- Bulletins scolaires : année scolaire et période explicites, période transmise à la fonction bulletin-qr, génération QR et choix A4 portrait/paysage.
+- Sécurisation du contexte de période dans l'impression des bulletins.
+- Édition complète par classe : listes, fiches de notes, bulletins, cartes, emplois du temps et impayés.
+- Liste imprimée par classe : téléphone apprenant ET téléphone parent, montants dus/payés/restants.
+- Annuaire des apprenants : affichage du téléphone parent depuis la relation élève-parent.
+- Menu Parents : affichage du contact et du ou des apprenants liés.
+- Formulaire de modification d'un apprenant : champs parent préremplis depuis la relation existante.
+- Enregistrement du contact parent : mise à jour de la fiche liée, réutilisation d'un parent ayant le même téléphone dans le même établissement, création de la liaison manquante.
+- Si le numéro n'est pas ressaisi mais qu'un parent est déjà lié, son téléphone existant est conservé.
+- Possibilité d'enregistrer une fiche parent avec nom/prénoms/email même si le téléphone doit être complété plus tard.
+- Correction du calcul des notes exportées EducMaster : utilisation de l'année scolaire active au lieu d'une variable globale non définie.
+- Finances, échéanciers, reçus, photocopies/support, présences, cartes et autres fonctions de la base complète conservés.
+
+LIMITES ET ACTIONS À EFFECTUER
+- Dans la base consultée le 25/11/2026, 71 élèves étaient enregistrés, mais la table parents et la table eleves_parents étaient vides. Les téléphones des parents qui n'existent dans aucune source sauvegardée ne peuvent pas être recréés par le code seul.
+- Les numéros des apprenants ne sont jamais copiés comme numéros des parents.
+- À la première modification d'un dossier, le secrétariat peut saisir les coordonnées disponibles; le code crée alors la fiche parent et la relation. Les numéros parent retrouvés dans une ancienne sauvegarde peuvent être importés séparément après rapprochement fiable.
+- Les migrations SQL sont conservées comme références et ne doivent pas être réexécutées sans vérifier l'état actuel de Supabase.
+- La fonction bulletin-qr active en production a été consultée; elle attend le champ `periode`. Aucun déploiement de cette fonction n'a été effectué dans cette archive.
+- ZIP non publié. Après publication, tester avec un compte réel : inscription, modification d'un élève, affichage des deux listes, impression de liste par classe et impression de bulletins avec QR.

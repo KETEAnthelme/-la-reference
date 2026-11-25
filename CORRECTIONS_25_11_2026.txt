@@ -1,0 +1,23 @@
+LA RÉFÉRENCE — CORRECTIONS DU 25/11/2026
+
+Corrections intégrées dans app.js :
+1. Liste des débiteurs : sélection obligatoire d'une tranche (1 à 7) ; seuls les apprenants ayant un reste à payer sur cette tranche sont affichés. Les impayés sont visibles même avant la date de renvoi, avec leur situation indiquée.
+2. Impression des listes : choix Portrait (P) ou Paysage (L) au moment de l'impression.
+3. Saisie des notes par apprenant : sélection de l'année scolaire avant la classe et l'apprenant ; classes et matières limitées aux affectations actives de l'année choisie ; affichage des champs de saisie après sélection de l'année, de la classe et de l'apprenant.
+4. Enregistrement et classement des notes : utilisation de l'année scolaire choisie pour retrouver les affectations et calculer le rang.
+
+Corrections conservées de la version précédente :
+- Téléphone du parent, total dû, total payé et reste à payer dans la liste par classe.
+- Export CSV et impression A4 de la liste par classe.
+- Les échéanciers, paiements, reçus et données des apprenants ne sont pas supprimés ni migrés par cette correction.
+
+Vérifications effectuées :
+- node --check app.js : OK
+- node --check support-fees.js : OK
+- Intégrité de l'archive source : OK
+
+Publication :
+- Remplacer les fichiers du dépôt par le contenu de cette archive, puis valider un commit sur la branche de production.
+- Cette archive ne déploie pas elle-même le site et ne modifie pas la base Supabase.
+- Ne pas réappliquer les scripts SQL inclus sans vérification préalable : le rapport de la version précédente indique que la migration des échéanciers a déjà été appliquée.
+- Effectuer les tests réels dans chaque rôle avant utilisation en production.

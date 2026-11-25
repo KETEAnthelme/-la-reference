@@ -1,0 +1,7 @@
+CORRECTION V6 — ACCÈS ADMINISTRATION
+
+- Le rôle administrateur_general retrouve l'accès à « Comptes et autorisations ».
+- Le rôle direction (administrateur secondaire) conserve les fonctions de gestion mais ne voit pas « Comptes et autorisations ».
+- La corbeille reste réservée à l'administrateur principal.
+- « Mon compte et paramètres » reste masqué conformément aux restrictions précédentes.
+- Aucun compte n'est supprimé par cette correction. Les suppressions de comptes doivent être faites séparément après validation des deux accès.

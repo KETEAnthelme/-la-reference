@@ -64,7 +64,7 @@ function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&l
 function roleAllowedPages(){
  const role=currentProfile?.role||"";
  const rules={
-  administrateur_general:["dashboard","hr","groups","edition","students","teachers","classes","grades","bulletins","cards","ped-assign-teachers","ped-assign-subjects","ped-interrogations","ped-student-averages","ped-subject-averages","ped-term-averages","ped-statistics","ped-annual","payments","finance-movements","support-fees","attendance","schedule","parents","reports","educmaster","edition-list","edition-grades","edition-debtors","edition-em-list","edition-em-notes"],
+  administrateur_general:["dashboard","hr","groups","edition","students","teachers","classes","grades","bulletins","cards","ped-assign-teachers","ped-assign-subjects","ped-interrogations","ped-student-averages","ped-subject-averages","ped-term-averages","ped-statistics","ped-annual","payments","finance-movements","support-fees","attendance","schedule","parents","reports","educmaster","edition-list","edition-grades","edition-debtors","edition-em-list","edition-em-notes","settings","access","recycle-bin"],
   
   directeur:["dashboard","hr","groups","edition","students","teachers","classes","grades","bulletins","cards","ped-assign-teachers","ped-assign-subjects","ped-interrogations","ped-student-averages","ped-subject-averages","ped-term-averages","ped-statistics","ped-annual","payments","finance-movements","support-fees","attendance","schedule","parents","reports","educmaster","edition-list","edition-grades","edition-debtors","edition-em-list","edition-em-notes"],
   direction:["dashboard","hr","groups","edition","students","teachers","classes","grades","bulletins","cards","ped-assign-teachers","ped-assign-subjects","ped-interrogations","ped-student-averages","ped-subject-averages","ped-term-averages","ped-statistics","ped-annual","payments","finance-movements","support-fees","attendance","schedule","parents","reports","educmaster","edition-list","edition-grades","edition-debtors","edition-em-list","edition-em-notes"],
@@ -137,7 +137,7 @@ const pages={
  cards:()=>cardsPage(),
  teachers:()=>listPage("Enseignants","Gestion du personnel enseignant","Ajouter un enseignant","teacher",db.teachers,["Matricule","Nom","Matière","Téléphone"]),
  classes:()=>listPage("Classes","Classes et niveaux","Ajouter une classe","class",db.classes,["Classe","Niveau","Capacité"]),
- parents:()=>currentProfile?.role==="parent"?parentPortalPage():listPage("Parents","Contacts des parents/tuteurs","Ajouter un parent","parent",db.parents,["Nom","Élève","Téléphone","Email"]),
+ parents:()=>currentProfile?.role==="parent"?parentPortalPage():parentContactsPage(),
  payments:()=>paymentsPage(),
  "finance-movements":()=>financeMovementsPage(),
  grades:()=>pedagogicGridPage("class"),
@@ -714,6 +714,28 @@ async function saveAttendanceClass(){
   else {const {error}=await supabaseClient.from("presences").insert({etablissement_id:activeSiteId,eleve_id:Number(st.id),date_presence:date,statut:absent?"absent":"present",motif:absent?reason:null,saisi_par:u.user.id});if(error){notifyError("Enregistrement du pointage de "+st.name,error);return;}}
  }
  alert("Appel enregistré pour "+students.length+" élève(s). Les absences cochées ont été enregistrées et les autres élèves marqués présents.");closeModal();await loadLiveData();showPage("attendance");
+}
+
+
+function parentContactsPage(){
+ const active=db.students.filter(st=>st.status!=="ancien"&&st.status!=="exclu"&&st.status!=="transfere");
+ const linked=active.filter(st=>liveStudentParentLinks.some(x=>String(x.eleve_id)===String(st.id))).length;
+ const rows=active.map(st=>{
+  const link=liveStudentParentLinks.find(x=>String(x.eleve_id)===String(st.id)),parent=link?.parents||{};
+  const cls=db.classes.find(c=>String(c.id)===String(st.classId))?.name||"Sans classe";
+  const id=Number(st.id);
+  return `<tr data-parent-contact-row="${id}" data-search="${esc([st.name,cls,parent.nom,parent.prenoms,parent.telephone].join(" ").toLocaleLowerCase("fr"))}"><td>${esc(st.name)}</td><td>${esc(cls)}</td><td><input id="pc_last_${id}" value="${esc(parent.nom||"")}" placeholder="Nom du parent"></td><td><input id="pc_first_${id}" value="${esc(parent.prenoms||"")}" placeholder="Prénoms"></td><td><input id="pc_phone_${id}" inputmode="tel" value="${esc(parent.telephone||"")}" placeholder="+229…"></td><td><input id="pc_email_${id}" type="email" value="${esc(parent.email||"")}" placeholder="Email (facultatif)"></td><td><select id="pc_link_${id}"><option ${link?.lien==="Père"?"selected":""}>Père</option><option ${link?.lien==="Mère"?"selected":""}>Mère</option><option ${!link?.lien||link?.lien==="Tuteur"?"selected":""}>Tuteur</option><option ${link?.lien==="Autre"?"selected":""}>Autre</option></select></td><td><button class="btn primary" onclick="saveParentContactRow(${id})">Enregistrer</button></td></tr>`;
+ }).join("");
+ return pageShell("Contacts des parents","Saisie et mise à jour des coordonnées des parents/tuteurs — les dossiers des élèves sont conservés.","","",`<div class="notice">${linked} contact(s) parent lié(s) sur ${active.length} apprenant(s) actif(s). Les anciens numéros absents de la base ne peuvent pas être retrouvés automatiquement : utilisez les fiches d'inscription ou les informations fournies par les familles.</div><div class="card" style="margin:12px 0"><input id="parentContactsSearch" placeholder="Rechercher un élève, une classe ou un téléphone…" oninput="filterParentContacts()" style="width:100%"></div><div class="table-wrap"><table class="table"><thead><tr><th>Apprenant</th><th>Classe</th><th>Nom parent</th><th>Prénoms</th><th>Téléphone parent</th><th>Email</th><th>Lien</th><th>Action</th></tr></thead><tbody>${rows||'<tr><td colspan="8">Aucun apprenant actif.</td></tr>'}</tbody></table></div>`);
+}
+function filterParentContacts(){const q=(val("parentContactsSearch")||"").toLocaleLowerCase("fr");document.querySelectorAll("[data-parent-contact-row]").forEach(row=>row.style.display=(!q||row.dataset.search.includes(q))?"":"none");}
+async function saveParentContactRow(studentId){
+ const last=val("pc_last_"+studentId).trim(),first=val("pc_first_"+studentId).trim(),phone=val("pc_phone_"+studentId).trim(),email=val("pc_email_"+studentId).trim();
+ if(!last&&!first&&!phone&&!email)return alert("Saisissez au moins le nom ou le téléphone du parent.");
+ if(phone&&!/^[+0-9().\s-]{6,25}$/.test(phone))return alert("Vérifiez le numéro de téléphone.");
+ const notice={value:""};
+ try{await saveStudentParentContact(studentId,activeSiteId,notice,{last,first,phone,email,relation:val("pc_link_"+studentId)||"Tuteur"});await loadLiveData();showPage("parents");alert("Contact parent enregistré et lié à l'apprenant.");}
+ catch(e){alert("Échec de l'enregistrement du contact : "+(e?.message||e));}
 }
 
 function studentsPage(){
@@ -1560,8 +1582,8 @@ function printReceipt(id){
  w.document.write(`<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>Reçu ${esc(ref)}</title><style>@page{size:A4 portrait;margin:5mm}*{box-sizing:border-box}html,body{margin:0;padding:0;font-family:Arial,sans-serif;color:#182233;font-size:9pt;line-height:1.15}.receipt{width:100%;max-width:190mm;margin:0 auto;border:1.5px solid #1d6b3a;padding:6mm}.head{text-align:center;border-bottom:1.5px solid #1d6b3a;padding-bottom:3mm}.head h1{color:#1d6b3a;margin:0;font-size:16pt}.ref{text-align:right;font-weight:bold;margin:5mm 0}table{width:100%;border-collapse:collapse;margin-top:4mm}td{padding:3mm;border-bottom:1px solid #ddd}.total{font-size:16pt;font-weight:bold}.foot{margin-top:12mm;display:flex;justify-content:space-between}@media print{button{display:none!important}.receipt{page-break-inside:avoid;break-inside:avoid}}</style></head><body><div class="receipt"><div class="head"><h1>GROUPE SCOLAIRE LA RÉFÉRENCE</h1><div>${esc(site?.nom||"")}</div><div>${esc(site?.adresse||"")} · ${esc(site?.telephone||"")}</div><h2>REÇU DE PAIEMENT</h2></div><div class="ref">N° ${esc(ref)}</div><table><tr><td>Élève</td><td><b>${esc(st?.name||p.student||"")}</b></td></tr><tr><td>Matricule</td><td>${esc(st?.matricule||"")}</td></tr><tr><td>Motif</td><td>${esc(p.reason||"")}</td></tr><tr><td>Date</td><td>${esc(p.date||"")}</td></tr><tr><td>Mode de paiement</td><td>${esc(p.mode||"")}</td></tr><tr><td>Montant versé</td><td class="total">${amount.toLocaleString("fr-FR")} FCFA</td></tr><tr><td>Montant dû</td><td>${due.toLocaleString("fr-FR")} FCFA</td></tr><tr><td>Solde restant</td><td>${balance.toLocaleString("fr-FR")} FCFA</td></tr></table><div class="foot"><span>Cachet et signature</span><span>Agent : ${esc([currentProfile?.prenom,currentProfile?.nom].filter(Boolean).join(" ")||"Non renseigné")}<br>La comptabilité</span></div><p style="text-align:center;margin-top:30px">Merci pour votre confiance.</p><button onclick="window.print()">Imprimer le reçu</button></div></body></html>`);w.document.close();setTimeout(()=>{try{const d=w.document,el=d.querySelector('.receipt');if(el){const printableHeight=1045;const contentHeight=Math.max(el.scrollHeight,el.getBoundingClientRect().height);const fit=Math.min(1,printableHeight/contentHeight);el.style.zoom=String(fit);el.style.transformOrigin='top left';}w.focus();w.print();}catch(e){try{w.print()}catch(_){}}},650);
 }
 
-async function saveStudentParentContact(studentId,site,noticeRef){
- const last=val("f_parent_last").trim(),first=val("f_parent_first").trim(),enteredPhone=val("f_parent_phone").trim(),email=val("f_parent_email").trim(),relation=val("f_parent_link")||"Tuteur";
+async function saveStudentParentContact(studentId,site,noticeRef,contactOverride=null){
+ const last=contactOverride?.last??val("f_parent_last").trim(),first=contactOverride?.first??val("f_parent_first").trim(),enteredPhone=contactOverride?.phone??val("f_parent_phone").trim(),email=contactOverride?.email??val("f_parent_email").trim(),relation=contactOverride?.relation??val("f_parent_link")??"Tuteur";
  const current=liveStudentParentLinks.find(x=>String(x.eleve_id)===String(studentId));
  const currentParent=current?.parents||{};
  const phone=enteredPhone||currentParent.telephone||"";
@@ -1591,6 +1613,9 @@ async function saveStudentParentContact(studentId,site,noticeRef){
  if(!matching){
   const {error}=await supabaseClient.from("eleves_parents").insert({eleve_id:Number(studentId),parent_id:Number(parentId),lien:relation,etablissement_id:site});
   if(error)throw new Error("Liaison parent-élève impossible : "+error.message);
+ }else{
+  const {error}=await supabaseClient.from("eleves_parents").update({lien:relation}).eq("eleve_id",Number(studentId)).eq("parent_id",Number(parentId)).eq("etablissement_id",site);
+  if(error)throw new Error("Mise à jour du lien parent-élève impossible : "+error.message);
  }
  noticeRef.value+=(noticeRef.value?" ":"")+"Contact parent enregistré et lié à l'apprenant.";
 }

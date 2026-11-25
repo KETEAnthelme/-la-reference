@@ -1,0 +1,17 @@
+CORRECTIONS FINALES — LA RÉFÉRENCE — V7
+Date : 25 novembre 2026
+
+ADMINISTRATEUR PRINCIPAL
+Le rôle administrateur_general retrouve toutes les rubriques, y compris « Mon compte et paramètres », « Comptes et autorisations » et « Corbeille générale ».
+
+ADMINISTRATEUR SECONDAIRE
+Le rôle direction conserve les fonctions générales de gestion, mais ne reçoit pas « Mon compte et paramètres », « Comptes et autorisations » ni « Corbeille générale ».
+
+CONTACTS DES PARENTS
+La rubrique « Parents » devient un registre de contacts associé aux apprenants. Pour chaque élève actif, elle permet de saisir/modifier le nom, les prénoms, le téléphone, l'e-mail et le lien parent/tuteur, puis d'enregistrer le rattachement à l'élève. Aucun dossier élève ou parent n'est supprimé.
+
+ÉTAT DES DONNÉES CONTRÔLÉ
+La base contient 71 élèves, 2 fiches parents et 2 liens parent-élève. Les autres coordonnées ne sont pas présentes dans les tables parents/liens. Elles devront être récupérées depuis les fiches d'inscription ou demandées aux familles ; le logiciel ne peut pas inventer les numéros manquants.
+
+IMPORTANT
+Cette archive ne crée pas automatiquement le compte « LES 3 C » et ne modifie pas les mots de passe Supabase. Ne supprimez aucun compte avant d'avoir créé et testé les deux comptes administrateurs. Les migrations SQL déjà appliquées ne doivent pas être relancées aveuglément.

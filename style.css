@@ -69,3 +69,33 @@
 .student-situation h4{margin:16px 0 8px;color:#174a7a}
 .student-situation .table th,.student-situation .table td{padding:7px 9px;font-size:12px}
 .student-situation .form-grid p{margin:5px 0}
+
+/* Accueil immersif animé — photo de classe avec filles et garçons */
+.accueil-hero{position:relative;isolation:isolate;min-height:calc(100vh - 150px);width:100%;overflow:hidden;border-radius:0 0 18px 18px;margin:0 0 18px;background:#0b3158 url("accueil-classe.jpg") center 42%/cover no-repeat;display:flex;align-items:center;justify-content:flex-start;color:#fff;box-shadow:0 12px 34px #082f5f30}
+.accueil-hero:before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(3,25,52,.82) 0%,rgba(3,25,52,.48) 48%,rgba(3,25,52,.08) 100%);animation:heroGlow 9s ease-in-out infinite alternate}
+.accueil-hero:after{content:"";position:absolute;inset:-2%;z-index:-2;background:url("accueil-classe.jpg") center 42%/cover no-repeat;animation:heroMotion 24s ease-in-out infinite alternate}
+.accueil-hero-content{padding:clamp(28px,6vw,76px);max-width:760px;text-shadow:0 2px 12px #00152b}
+.accueil-kicker{font-weight:800;letter-spacing:.22em;font-size:clamp(12px,1.4vw,17px);color:#ffdf65}
+.accueil-hero-content h1{font-size:clamp(38px,7vw,82px);line-height:1;margin:12px 0;font-weight:900;color:#fff}
+.accueil-hero-content h2{font-size:clamp(18px,2.6vw,30px);margin:0 0 10px;color:#fff}
+.accueil-hero-content p{font-size:clamp(15px,1.8vw,21px);margin:0}
+.accueil-pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:25px}.accueil-pills span{border:1px solid #ffffff9c;background:#ffffff20;border-radius:30px;padding:8px 16px;font-weight:700;backdrop-filter:blur(4px)}
+.accueil-hero-footer{position:absolute;bottom:0;left:0;right:0;padding:14px 24px;background:linear-gradient(90deg,#06386ddd,#06386d55);font-weight:700;letter-spacing:.04em;color:#fff}
+@keyframes heroMotion{from{transform:scale(1)}to{transform:scale(1.09) translateX(-1.2%)}}
+@keyframes heroGlow{from{opacity:.85}to{opacity:1}}
+@media(max-width:700px){.accueil-hero{min-height:calc(100vh - 210px);background-position:56% center}.accueil-hero:after{background-position:56% center}.accueil-hero-content{padding:26px 20px}.accueil-hero-footer{font-size:13px}}
+@media(prefers-reduced-motion:reduce){.accueil-hero:before,.accueil-hero:after{animation:none}}
+
+/* Accueil plein écran et animation permanente des 3C */
+.accueil-hero{min-height:calc(100vh - 175px);height:calc(100vh - 175px);max-height:1000px;background-position:center 42%;}
+.accueil-hero-content{max-width:850px;position:relative;z-index:2}
+.three-cs{margin-top:clamp(18px,3vh,34px);padding:14px 18px 16px;border:1px solid rgba(255,255,255,.62);border-radius:16px;background:rgba(4,35,76,.58);backdrop-filter:blur(5px);max-width:520px;box-shadow:0 10px 28px rgba(0,0,0,.18)}
+.three-cs-title{font-size:clamp(17px,2vw,23px);font-weight:900;letter-spacing:.22em;color:#ffe28a;margin-bottom:8px}
+.three-cs-words{position:relative;min-height:48px;display:grid;place-items:center;overflow:hidden}
+.three-cs-words span{grid-area:1/1;font-size:clamp(22px,3.2vw,38px);font-weight:900;letter-spacing:.025em;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.45);opacity:0;transform:translateY(18px);animation:threeCReveal 9s infinite}
+.three-cs-words span:nth-child(1){animation-delay:0s}
+.three-cs-words span:nth-child(2){animation-delay:3s}
+.three-cs-words span:nth-child(3){animation-delay:6s}
+@keyframes threeCReveal{0%,4%{opacity:0;transform:translateY(18px)}10%,27%{opacity:1;transform:translateY(0)}33%,100%{opacity:0;transform:translateY(-16px)}}
+@media(max-width:700px){.accueil-hero{height:auto;min-height:calc(100vh - 205px);max-height:none}.three-cs{margin-top:20px;padding:12px}.three-cs-words{min-height:42px}}
+@media(prefers-reduced-motion:reduce){.three-cs-words span{animation:none;opacity:1;transform:none}.three-cs-words span:not(:first-child){display:none}}

@@ -1,0 +1,14 @@
+MISE À JOUR COMPLÈTE V4 — GROUPE SCOLAIRE LA RÉFÉRENCE
+
+Éléments intégrés dans cette version :
+1. Accueil : visuel de classe avec élèves filles et garçons, directeur d'âge mûr en veste rouge bordeaux, effet de mouvement permanent et affichage animé des 3C : Communication, Concertation, Consensus.
+2. Comptes : l'administrateur général conserve les droits de gestion fonctionnelle, mais n'a plus accès aux rubriques Paramètres / Mon compte, Comptes et autorisations et Corbeille. Le rôle « direction » sert de deuxième administrateur et conserve l'accès aux activités de gestion (élèves, paiements, notes, bulletins, finances, etc.) sans ces trois rubriques.
+3. Contacts parents : le formulaire d'inscription crée ou réutilise une fiche parent par téléphone et relie celle-ci à l'élève. Les listes utilisent les liens élèves_parents pour afficher le téléphone parent.
+4. Bulletins : le programme contient déjà l'émission d'une URL de vérification et l'impression d'un QR code sur chaque bulletin. La fonction côté Supabase doit exister et être correctement configurée pour que le QR soit valide.
+5. Le code d'impression des bulletins conserve le format A4 et le choix portrait/paysage déjà présent dans le projet.
+
+IMPORTANT — AVANT PUBLICATION
+- Ce ZIP contient les fichiers applicatifs. Le déploiement Vercel ne lance pas automatiquement les fichiers SQL. Ne pas exécuter les migrations SQL sans les examiner et faire une sauvegarde Supabase.
+- Les anciens comptes ne sont pas supprimés par ce ZIP. Il faut créer/vérifier le compte secondaire avec le rôle « direction », puis désactiver les anciens comptes un par un après avoir confirmé les deux connexions. Ne pas supprimer de profils au hasard : les opérations d'authentification peuvent être liées à des historiques.
+- Les numéros parentaux déjà absents de la base ne peuvent pas être reconstitués automatiquement. Les anciennes fiches sans téléphone doivent être complétées à partir des dossiers papier ou d'un fichier Excel fiable.
+- Test obligatoire après publication : connexion avec les deux comptes, inscription test avec numéro parent, vérification des listes, impression d'un bulletin et scan du QR code depuis un téléphone.

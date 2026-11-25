@@ -27,3 +27,15 @@ LIMITES ET ACTIONS À EFFECTUER
 - Les migrations SQL sont conservées comme références et ne doivent pas être réexécutées sans vérifier l'état actuel de Supabase.
 - La fonction bulletin-qr active en production a été consultée; elle attend le champ `periode`. Aucun déploiement de cette fonction n'a été effectué dans cette archive.
 - ZIP non publié. Après publication, tester avec un compte réel : inscription, modification d'un élève, affichage des deux listes, impression de liste par classe et impression de bulletins avec QR.
+
+AJOUTS DEMANDÉS LE 25/11/2026
+- Accueil : conservation de la structure de l'accueil et remplacement de la photo de couverture par une scène scolaire représentative avec filles et garçons ; affichage immersif plein écran, identité et slogan intégrés dans l'image ; animation de zoom douce et continue, désactivée si l'appareil demande la réduction des animations.
+- Deuxième compte : l'option de connexion « Administrateur secondaire » utilise le rôle applicatif existant « direction ». Elle conserve les accès de gestion courante (élèves, pédagogie, bulletins, paiements, rapports, établissements et autres modules) mais n'affiche pas « Mon compte / Paramètres », « Comptes et autorisations » ni « Corbeille ». Le compte lui-même doit être créé depuis Supabase/Gestion des accès par le compte principal, avec le nom/prénom de son titulaire.
+- Le compte administrateur général existant conserve ses permissions applicatives, à l'exception des rubriques explicitement exclues dans la demande : paramètres/mon compte, gestion des accès et corbeille.
+- Le code QR de vérification par bulletin était déjà présent dans cette base de travail et reste conservé. Chaque bulletin appelle la fonction Supabase bulletin-qr avec l'élève, l'année, la période et les données du bulletin. Il reste à tester le scan réel et l'URL publique sur un bulletin de production.
+
+PRÉCAUTIONS IMPORTANTES
+- Aucun compte existant n'est supprimé automatiquement : il faut d'abord créer et tester le compte secondaire et confirmer que les connexions essentielles fonctionnent. La suppression des comptes doit être faite ensuite sans toucher aux fiches élèves, notes, paiements ou historiques.
+- Les téléphones parents ne peuvent s'afficher que si les contacts sont réellement enregistrés dans parents et reliés à l'élève dans eleves_parents. Le code de cette archive conserve la création/réutilisation et l'affichage des contacts, mais les numéros absents de la base ne peuvent pas être inventés ; ils doivent être ressaisis ou importés depuis une sauvegarde fiable.
+- Le QR de bulletin dépend de la fonction Supabase bulletin-qr déjà déployée. Ce ZIP ne modifie pas la fonction distante ni les politiques RLS.
+- Contrôle effectué localement : syntaxe JavaScript avec node --check et intégrité ZIP. Pas de test de connexion réel, de scan QR réel ni de déploiement Vercel effectué dans cette étape.

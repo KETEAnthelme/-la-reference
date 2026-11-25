@@ -1,15 +1,19 @@
-LA RÉFÉRENCE — CORRECTION LISTE DES APPRENANTS
+LA RÉFÉRENCE — CORRECTION PARENTS ET LISTE DES APPRENANTS
 
 Fichier modifié : app.js
 
-Corrections :
-1. Impression de la liste des apprenants en A4 paysage avec marges réduites, tableau élargi et hauteur des lignes adaptée à l'effectif afin de mieux occuper la page.
-2. À l'inscription, la fiche parent est désormais créée dès qu'un téléphone parent est renseigné, même si le nom du parent a été laissé vide. Le nom générique « Parent / tuteur » est utilisé dans ce seul cas.
-3. Le lien parent-apprenant existant est conservé et le numéro est récupéré depuis la fiche parent liée.
+Corrections incluses :
+1. Conservation de la mise en page d'impression A4 paysage de la liste des apprenants.
+2. À la création d'un élève, création de la fiche parent dès qu'un nom ou un téléphone parent est saisi.
+3. Lors de la modification d'un élève déjà inscrit, affichage des coordonnées du parent actuellement lié et possibilité de compléter ou corriger le nom, les prénoms, le téléphone, l'email et le lien familial.
+4. Lors de l'enregistrement d'une modification, mise à jour ou création de la fiche parent et mise à jour de la liaison parent-apprenant existante afin d'éviter qu'une ancienne liaison masque le nouveau numéro.
+5. Le téléphone reste récupéré depuis la fiche parent liée pour l'affichage dans les listes et l'impression.
 
-Installation :
-- Remplacer le fichier app.js à la racine du projet par celui de cette archive.
-- Ne pas supprimer ni remplacer les autres fichiers du projet.
-- Publier ensuite le projet depuis le dépôt GitHub habituel.
+INSTALLATION :
+- Décompresser cette archive.
+- Remplacer uniquement le fichier app.js à la racine du projet par celui de l'archive.
+- Conserver tous les autres fichiers du projet.
+- Envoyer le fichier modifié dans le dépôt GitHub habituel, puis laisser Vercel publier.
 
-Limite importante : les anciennes inscriptions dont les numéros n'ont jamais été enregistrés dans la table parents et qui n'ont aucun lien parent-apprenant ne peuvent pas être reconstituées par cette correction. Les numéros déjà présents dans les fiches parents liées seront affichés. Les nouvelles inscriptions enregistreront le parent dès qu'un numéro est saisi.
+IMPORTANT :
+Les numéros qui n'ont jamais été enregistrés dans la base ne peuvent pas être retrouvés automatiquement. Pour ces anciens élèves, ouvrir « Apprenants » > « Modifier dossier », compléter le téléphone du parent, puis enregistrer. Cette opération crée ou met à jour la fiche parent et sa liaison avec l'élève.

@@ -1,0 +1,11 @@
+CORRECTION — COMPTES ET AUTORISATIONS
+
+- Correction de la liste des établissements : les lignes répétées provenant de plusieurs affectations dans utilisateur_etablissements sont dédupliquées par identifiant d'établissement.
+- Le sélecteur global d'établissement et le formulaire de création des accès utilisent maintenant la liste dédupliquée.
+- Les identifiants d'établissements sélectionnés sont dédupliqués avant l'envoi de la demande de création du compte.
+- Le message de confirmation indique correctement que la connexion du personnel se fait par fonction, nom, prénoms et mot de passe provisoire ; le numéro AG reste un identifiant de suivi et n'est pas demandé à la connexion.
+- Les rôles de connexion restent : Secrétariat / Caisse, Surveillant, Censeur, Directeur et Parent. Les alias des rôles de secrétariat sont gérés par la fonction login-by-name actuellement déployée.
+
+Les trois établissements de production (Siège, Annexe 1, Annexe 2) sont conservés. Aucun élève, paiement, note, reçu ou historique n'est modifié.
+
+IMPORTANT : cette archive corrige le code du site. Elle ne crée pas automatiquement les comptes du personnel et ne publie pas le site. Les comptes doivent être créés depuis Gestion des accès après publication de cette version.

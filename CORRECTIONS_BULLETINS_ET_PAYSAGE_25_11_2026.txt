@@ -1,0 +1,12 @@
+CORRECTIONS DU 25/11/2026
+
+1. Impression des bulletins scolaires
+- Correction de la propriété envoyée à la fonction bulletin-qr : periode reçoit maintenant la valeur de la période sélectionnée (period).
+- Ajout du choix d'orientation A4 Portrait ou Paysage avant la génération des bulletins.
+- Adaptation des dimensions et de la mise en page du bulletin selon l'orientation choisie.
+
+2. Impression de l'édition complète par classe
+- Ajout du choix A4 Portrait ou Paysage avant l'impression.
+- Les autres éditions utilisant editionPrint conservent leur choix d'orientation déjà présent.
+
+Aucune migration SQL ou modification de base de données n'est requise pour ces corrections.

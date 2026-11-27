@@ -1,0 +1,13 @@
+IMPORT EDUCMASTER — LA RÉFÉRENCE
+
+1. Publier ce ZIP sur le projet Vercel existant en remplaçant les fichiers du site.
+2. La table referentiel_educmaster est déjà créée dans Supabase.
+3. Se connecter comme Administrateur général ou Direction LES 3 C.
+4. Ouvrir Apprenants puis cliquer sur « Importer le catalogue EducMaster (513 élèves) ».
+5. Attendre le message de confirmation.
+6. Pour inscrire un élève du catalogue, cliquer sur Nouveau puis le rechercher dans la liste EducMaster : ses informations et son numéro se rempliront automatiquement. Choisir ensuite sa classe et saisir le paiement.
+7. Un nouvel élève absent du catalogue peut toujours être saisi manuellement.
+
+Le catalogue comprend 513 numéros EducMaster distincts issus des 10 PDF fournis (586 lignes, 73 répétitions entre promotions). Les répétitions sont regroupées sous un seul numéro, avec les années et promotions conservées. Les élèves existants ne sont jamais supprimés. Les associations aux dossiers existants sont tentées uniquement par nom/prénoms exacts et date de naissance compatible.
+
+Le bouton d'importation charge le JSON local du site dans Supabase en lots de 100. Cette étape doit être exécutée une seule fois après publication.

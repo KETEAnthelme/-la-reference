@@ -1,0 +1,3 @@
+-- Migration déjà appliquée au projet Supabase bsmrwupcbhwoquwjdtvi
+-- Table referentiel_educmaster : catalogue des élèves EducMaster, indexé par numéro unique.
+-- La fonction d'importation de l'interface charge educmaster_catalogue.json en lots.
